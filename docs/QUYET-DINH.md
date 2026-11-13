@@ -34,3 +34,4 @@ Ghi các lựa chọn kỹ thuật, nghiệp vụ đã chốt, kèm lý do. Đ�
 | Q28 | 13/11/2026 | PWA không dùng service worker | Đặc tả: không lưu đệm để dùng ngoại tuyến; Chrome cài được PWA không cần service worker | Đặc tả mục 10 |
 | Q29 | 13/11/2026 | Đẩy code lên GitHub cần công cụ đăng nhập: MinGit không có Git Credential Manager | Đề xuất GitHub CLI bản portable (`gh auth login` qua trình duyệt); chờ người dùng đồng ý | |
 | Q30 | 13/11/2026 | clasp 3.4.1 (phát hành 28/08/2026) cài trong dự án; `npm run push:dev` = `clasp push -f` | `-f` ghi đè `appsscript.json` trên server bằng bản trong repo, đúng ý đồ | https://github.com/google/clasp |
+| Q31 | 13/11/2026 | `.clasp.json` không đưa lên GitHub (thêm vào `.gitignore`); repo GitHub `thuannv181198/tb` công khai, tạo bằng GitHub CLI | Mỗi máy, mỗi bản (DEV, PROD) giữ mã project riêng, tránh đẩy nhầm code sang PROD | Người dùng |
