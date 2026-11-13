@@ -5,8 +5,46 @@
 | Mốc | Trạng thái | Ghi chú |
 | --- | --- | --- |
 | Khởi động | Xong 12/11/2026 | Rà đặc tả, câu hỏi C1–C7, kế hoạch M0 |
-| M0 | **Xong code 13/11/2026, chờ người dùng duyệt `docs/HOP-DONG-DU-LIEU.md`** | `npm test` 52/52, `npm run lint` 0 lỗi |
-| M1–M8 | Chưa làm | |
+| M0 | Nghiệm thu 13/11/2026 | Người dùng duyệt; C2, C6, C8 theo đề xuất |
+| M1 | **Xong code 13/11/2026, chờ người dùng triển khai DEV và thử trên điện thoại** | `npm test` 76/76, `npm run lint` 0 lỗi |
+| M2–M8 | Chưa làm | |
+
+## M1 – Chạy thật: đăng nhập và phân quyền
+
+### Đã làm
+
+- Backend:
+  - `Api.js`: `doPost`, `doGet`, bảng action trung tâm, kiểm tra phiên và vai trò, `requestId` lưu ở `KetQuaRequest` kèm bộ đệm, `BUSY`, `NhatKy` (Thành công, Từ chối, Lỗi).
+  - `Auth.js`: tokeninfo kiểm tra aud, iss, email_verified, exp, tên miền và hd; mã phiên HMAC; "Phiên hợp lệ từ"; bộ đệm `nd:` 5 phút, xóa ngay khi sửa tài khoản; tài khoản (`user.*`), chủ sở hữu không khóa được.
+  - `HeThong.js`: `config.get`, `config.save` (kiểm tra từng khóa, đổi tên tình trạng ghi lại cột 5 theo C4, chạy lại được), `app.bootstrap`.
+  - Lưu đệm `CauHinh` (khóa `ch`), tăng `phienBanDuLieu`.
+  - `appsscript.json`.
+  - Thêm khóa C6.
+- Frontend `web/`:
+  - CSP theo hướng dẫn của Google Identity Services; `api.js` (POST text/plain, `requestId`, thời gian chờ 30 giây, Gửi lại, mất phiên);
+  - đăng nhập Google; phát hiện Zalo, Messenger; màn hình chặn khi chưa đăng nhập mà quét QR;
+  - điều hướng 2 khu vực theo vai trò; màn hình Tài khoản, Cấu hình;
+  - PWA (manifest, icon); số phiên bản `?v=` ở mọi file.
+- Công cụ:
+  - `npm run dev` (máy phát triển, đăng nhập thử);
+  - `npm run bump`, `npm run push:dev`;
+  - workflow GitHub Pages.
+- Đã xem giao diện ở khổ 360 px bằng Edge ẩn (13 màn hình): không lỗi JS, không lỗi CSP, không tràn ngang; localStorage chỉ có `qltb.session`.
+- Rà soát độc lập: 2 điểm "Cần sửa", đã sửa và có kiểm thử tái hiện (chạy trên code cũ thì không đạt):
+  - request ẩn danh gửi rác vào `auth.login` làm đầy `NhatKy`;
+  - đổi tên tình trạng bị ngắt giữa chừng thì gửi lại không chạy tiếp.
+- Tài liệu: `HUONG-DAN-TRIEN-KHAI.md` (Bước 1–12), `KIEM-THU-THU-CONG.md` (phần M1), cập nhật `HOP-DONG-DU-LIEU.md`, `QUYET-DINH.md` (Q22–Q30).
+
+### Chưa kiểm chứng được
+
+Đăng nhập Google thật, Apps Script thật, `smokeTest()` trên DEV, GitHub Pages, Zalo, điện thoại thật.
+
+### Chờ người dùng
+
+1. Đồng ý cài `@google/clasp` 3.4.1 (thư viện phát triển) và GitHub CLI bản portable (để đẩy code lên GitHub).
+2. Làm `HUONG-DAN-TRIEN-KHAI.md` Bước 1–12. Claude Code chạy giúp các lệnh `clasp`, `git push`.
+3. Gửi nhật ký `smokeTest()`, Client ID, URL web app.
+4. Chạy kiểm thử M1 trong `KIEM-THU-THU-CONG.md`, rồi báo kết quả.
 
 ## M0 – Nền móng và hợp đồng dữ liệu
 

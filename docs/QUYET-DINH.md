@@ -25,3 +25,12 @@ Ghi các lựa chọn kỹ thuật, nghiệp vụ đã chốt, kèm lý do. Đ�
 | Q19 | 13/11/2026 | Kiểm thử: trình chạy có sẵn của Node; ESLint 10.13.0, `@eslint/js` 10.0.1, `globals` 17.13.0 (phát hành trước 2 tuần trở lên) | ESLint 9 đã hết hỗ trợ. `npm audit` báo 4 lỗ hổng mức trung bình ở `minimatch` (thư viện con của ESLint): chỉ chạy trên máy phát triển với mẫu đường dẫn của chính repo, không vào app; chấp nhận, xem lại khi nâng ESLint | |
 | Q20 | 13/11/2026 | Bộ giả lập coi chuỗi bắt đầu bằng `=` là công thức kể cả ô văn bản thuần; mọi chuỗi đi qua `Util.toSheetText` | Giả định chặt hơn thực tế thì an toàn hơn; `smokeTest()` kiểm chứng trên Sheet thật | |
 | Q21 | 13/11/2026 | Không dùng định dạng số "General"; cột không có định dạng riêng thì để nguyên | Chưa chắc Sheet nhận chuỗi định dạng này | |
+| Q22 | 13/11/2026 | M0 được duyệt; C2, C6, C8 theo phương án đề xuất | Người dùng trả lời "theo đề xuất" | C2, C6, C8 |
+| Q23 | 13/11/2026 | Quyền `drive` đầy đủ thay vì `drive.file` | `DriveApp` cần quyền này; người dùng còn có thể khai báo thư mục Drive có sẵn | Đặc tả mục 4 |
+| Q24 | 13/11/2026 | Mã phiên tự chứa (email, thời điểm cấp, hết hạn), ký HMAC; đăng xuất chỉ xóa phiên trên máy và ghi `NhatKy` | Không cần lưu phiên ở server; "Đăng xuất mọi thiết bị" dùng cột "Phiên hợp lệ từ" | Đặc tả mục 3 |
+| Q25 | 13/11/2026 | `NhatKy` "Từ chối" ghi trong khóa chờ tối đa 3 giây; không lấy được khóa thì bỏ dòng đó, không làm lỗi phản hồi | `Repo.append` bắt buộc khóa; ghi nhật ký không được làm hỏng thao tác chính | |
+| Q26 | 13/11/2026 | Gắn `?v=` vào mọi lệnh `import` của `web/js`, đổi bằng `npm run bump` | Mọi file tĩnh phải gắn số phiên bản (đặc tả mục 10). Import map là script nội tuyến, bị CSP chặn | |
+| Q27 | 13/11/2026 | Đăng nhập thử `dev:<email>` chỉ có trong `tools/dev-server.js` (tokeninfo giả) | Quy tắc: không có cửa sau đăng nhập trong `gas/` | `.claude/rules/gas-backend.md` |
+| Q28 | 13/11/2026 | PWA không dùng service worker | Đặc tả: không lưu đệm để dùng ngoại tuyến; Chrome cài được PWA không cần service worker | Đặc tả mục 10 |
+| Q29 | 13/11/2026 | Đẩy code lên GitHub cần công cụ đăng nhập: MinGit không có Git Credential Manager | Đề xuất GitHub CLI bản portable (`gh auth login` qua trình duyệt); chờ người dùng đồng ý | |
+| Q30 | 13/11/2026 | clasp 3.4.1 (phát hành 28/08/2026) cài trong dự án; `npm run push:dev` = `clasp push -f` | `-f` ghi đè `appsscript.json` trên server bằng bản trong repo, đúng ý đồ | https://github.com/google/clasp |

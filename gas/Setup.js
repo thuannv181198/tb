@@ -56,6 +56,7 @@ var Setup = (function () {
       if (Object.keys(toSave).length) Repo.setProps(toSave);
 
       Repo.useSpreadsheet(ss);
+      Repo.clearConfig(); // Admin có thể vừa sửa tay CauHinh
       var migration = Migrations.run(ss, steps);
       // Lưới an toàn: thêm lại sheet hoặc cột bị xóa nhầm bằng tay (không đổi dữ liệu đã có)
       var repaired = [];
@@ -205,6 +206,24 @@ var Setup = (function () {
     });
   }
 
+  /**
+   * Đặt lại danh sách thả xuống cột Tình trạng của ThietBi. list: danh sách tên; bỏ trống thì
+   * lấy tên hiển thị hiện tại trong CauHinh.
+   */
+  function applyStatusValidation(ss, list) {
+    var sheet = ss.getSheetByName('ThietBi');
+    var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(Util.str);
+    var colIndex = headers.indexOf('Tình trạng');
+    var maxRows = sheet.getMaxRows();
+    if (colIndex < 0 || maxRows < 2) return;
+    if (!list) {
+      var names = Repo.statusNames();
+      list = Config.STATUSES.map(function (s) { return names[s.code]; });
+    }
+    var rule = SpreadsheetApp.newDataValidation().requireValueInList(list, true).setAllowInvalid(false).build();
+    sheet.getRange(2, colIndex + 1, maxRows - 1, 1).setDataValidation(rule);
+  }
+
   /** Xóa trang tính mặc định trống do Google tạo khi tạo file mới. */
   function removeDefaultSheet(ss) {
     var sheets = ss.getSheets();
@@ -232,6 +251,7 @@ var Setup = (function () {
   return {
     run: run,
     applyFormats: applyFormats,
+    applyStatusValidation: applyStatusValidation,
     describe: describe
   };
 })();

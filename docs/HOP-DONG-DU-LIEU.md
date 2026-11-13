@@ -96,7 +96,8 @@ Cột: `Khóa` (T), `Giá trị` (T), `Mô tả` (T).
 | `GH_GUI_YC_HE_THONG_MOI_PHUT` | 30 | Gửi yêu cầu: 30 lần mỗi phút toàn hệ thống |
 | `GH_TRA_CUU_SAI_SDT` / `GH_TRA_CUU_SAI_PHUT` | 5 / 15 | Tra cứu phiếu: 5 lần sai mỗi 15 phút mỗi SĐT |
 | `GH_TRA_CUU_HE_THONG_MOI_PHUT` | 60 | Tra cứu phiếu: 60 lần mỗi phút toàn hệ thống |
-| `GH_MA_TRUY_CAP_SAI` / `GH_MA_TRUY_CAP_SAI_PHUT` | 5 / 15 | Nhập mã truy cập: 5 lần sai mỗi 15 phút mỗi trình duyệt. Tầng toàn hệ thống chờ quyết định C6 |
+| `GH_MA_TRUY_CAP_SAI` / `GH_MA_TRUY_CAP_SAI_PHUT` | 5 / 15 | Nhập mã truy cập: 5 lần sai mỗi 15 phút mỗi trình duyệt |
+| `GH_MA_TRUY_CAP_SAI_HE_THONG` / `GH_MA_TRUY_CAP_SAI_HE_THONG_PHUT` | 30 / 10 | Nhập mã truy cập: 30 lần sai trong 10 phút trên toàn hệ thống thì chặn nhập mã 10 phút (C6) |
 | `ANH_TOI_DA_KB` / `PDF_TOI_DA_KB` / `SO_FILE_TOI_DA` | 1024 / 5120 / 5 | Giới hạn file tải lên |
 | `ANH_NHO_TOI_DA_KY_TU` | 30000 | Độ dài tối đa base64 ảnh thu nhỏ |
 | `CACHE_CONG_KHAI_GIAY` | 300 | Thời gian lưu đệm danh sách công khai |
@@ -355,9 +356,9 @@ Phản hồi luôn là JSON:
 | `user.list` | A | Không | – | `users[] {email, name, role, phone, status, expiresOn, validFrom, createdAt, isOwner}` | |
 | `user.save` | A | Có | `email, name, role, phone, status, expiresOn` | `user` | `VALIDATION` (khóa hoặc hạ quyền chủ sở hữu, email sai, không phải Gmail/tên miền cho phép) |
 | `user.revokeSessions` | A | Có | `email` | `validFrom` | `NOT_FOUND` |
-| `config.get` | A | Không | – | `values {khóa: giá trị}`, `statuses[] {code, name}` | |
-| `config.save` | A | Có | `values {khóa: giá trị}` | `values` | `VALIDATION` |
-| `app.bootstrap` | A, Q, X | Không | `knownVersion` | `user`, `unitName`, `statuses`, `rooms`, `dataVersion`, `limits`; từ M2 thêm `devices` khi `knownVersion` khác `dataVersion` | |
+| `config.get` | A | Không | – | `values {khóa: giá trị}`, `descriptions {khóa: mô tả}`, `statuses[] {code, name, color, lendable, confirm}` | |
+| `config.save` | A | Có | `values {khóa: giá trị}` (chỉ khóa đã đổi) | như `config.get` | `VALIDATION` (khóa không được sửa, giá trị ngoài khoảng, bật mã truy cập mà thiếu mã, trùng tên tình trạng, phòng chưa có) |
+| `app.bootstrap` | A, Q, X | Không | `knownVersion` | `user`, `expiresAt`, `unitName`, `statuses`, `rooms[] {ma, ten, trangThai}`, `dataVersion`, `limits {hanMuonNgay, hanDeXuatToiDaNgay, phienGio}`, `serverVersion`; từ M2 thêm `devices` khi `knownVersion` khác `dataVersion` | |
 
 **M2 – danh mục, nhập hàng, bộ và hộp, tem**
 
@@ -527,4 +528,33 @@ Dữ liệu quản lý (serie, người mượn, SĐT, danh sách bản quản l
 File backend trong `gas/` (clasp đẩy lên thành `.gs`):
 
 - Đã có từ M0: `Config`, `Util`, `Repo`, `Migrations`, `Setup`, `SmokeTest`.
-- Dự kiến: `Api` (doPost, bảng action), `Auth`, `PublicApi`, `ThietBi`, `NhapHang`, `BoHop`, `YeuCau`, `MuonTra`, `BienBan`, `HinhAnh`, `DieuChinh`, `DieuChuyen`, `BaoCao`, `Triggers`.
+- Đã có từ M1:
+  - `Api`: `doPost`, `doGet`, bảng action, `requestId`, `NhatKy`;
+  - `Auth`: đăng nhập, mã phiên, tài khoản;
+  - `HeThong`: cấu hình, `app.bootstrap`;
+  - `appsscript.json`.
+- Dự kiến: `PublicApi`, `ThietBi`, `NhapHang`, `BoHop`, `YeuCau`, `MuonTra`, `BienBan`, `HinhAnh`, `DieuChinh`, `DieuChuyen`, `BaoCao`, `Triggers`.
+
+`appsscript.json`:
+
+- múi giờ `Asia/Ho_Chi_Minh`, runtime V8;
+- web app chạy dưới quyền người deploy (`USER_DEPLOYING`), ai cũng truy cập được (`ANYONE_ANONYMOUS`);
+- quyền ở M1: `spreadsheets`, `drive`, `script.external_request` (gọi `tokeninfo`), `userinfo.email` (`setup()` lấy email chủ sở hữu);
+- mốc sau thêm `script.send_mail` (M5) và `script.scriptapp` (trigger, M3), kèm cấp quyền lại.
+
+### 9.1 Mã phiên
+
+- Dạng: `base64url(JSON {"e": email, "i": ms cấp, "x": ms hết hạn}) + "." + base64url(HMAC-SHA256(phần đầu, SESSION_SECRET))`.
+- Server từ chối khi:
+  - sai chữ ký hoặc sai dạng (`SESSION_INVALID`);
+  - quá `x`, hoặc `i` trước "Phiên hợp lệ từ" của tài khoản (`SESSION_EXPIRED`).
+- Đổi `SESSION_SECRET` thì mọi phiên mất hiệu lực.
+
+### 9.2 Giao diện `web/`
+
+- `index.html` khai báo Content-Security-Policy theo hướng dẫn của Google Identity Services:
+  - script chỉ từ chính trang và `https://accounts.google.com/gsi/client`;
+  - kết nối tới `script.google.com` và `script.googleusercontent.com`, vì Apps Script chuyển hướng phản hồi sang tên miền sau.
+- Mọi file JS gắn `?v=<phiên bản>`, kể cả trong lệnh `import`. Đổi phiên bản bằng `npm run bump -- x.y.z`.
+- Phát hành bằng GitHub Actions (`.github/workflows/pages.yml`, câu hỏi C2).
+- `npm run dev` thay `config.js` bằng cấu hình máy phát triển và chấp nhận ID token dạng `dev:<email>`. Phần này chỉ có trong `tools/dev-server.js`, không có trong `gas/`, nên server thật không chấp nhận mã đó.

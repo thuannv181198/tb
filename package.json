@@ -9,7 +9,10 @@
   },
   "scripts": {
     "test": "node --test --test-reporter=spec",
-    "lint": "eslint gas tests eslint.config.js"
+    "lint": "eslint gas tests tools web eslint.config.js",
+    "dev": "node tools/dev-server.js",
+    "bump": "node tools/bump-version.js",
+    "push:dev": "clasp push -f"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

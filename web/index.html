@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Chỉ cho chạy script của chính trang và Google Identity Services (đặc tả mục 3) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client; style-src 'self' https://accounts.google.com/gsi/style; frame-src https://accounts.google.com/gsi/; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://accounts.google.com/gsi/; img-src 'self' data: blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#1b5e20">
+  <title>Quản lý thiết bị – KHOA CÔNG NGHỆ NĂNG LƯỢNG</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/style.css?v=0.2.0">
+  <script type="module" src="js/app.js?v=0.2.0"></script>
+</head>
+<body>
+  <div id="banner"></div>
+  <header class="topbar">
+    <div class="topbar-title">
+      <strong>Quản lý thiết bị</strong>
+      <span id="unit-name">KHOA CÔNG NGHỆ NĂNG LƯỢNG</span>
+    </div>
+    <div id="topbar-action"></div>
+  </header>
+  <main id="view" tabindex="-1"></main>
+  <nav id="nav" class="bottom-nav" aria-label="Điều hướng chính"></nav>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript>Trình duyệt cần bật JavaScript để dùng ứng dụng.</noscript>
+</body>
+</html>

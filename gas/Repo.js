@@ -430,18 +430,63 @@ var Repo = (function () {
 
   // ---------- CauHinh ----------
 
-  /** Bảng khóa → giá trị (chuỗi) của CauHinh, đọc một lần mỗi lần chạy. */
+  var CONFIG_CACHE_KEY = 'ch';
+  var CONFIG_CACHE_SECONDS = 300;
+
+  /**
+   * Bảng khóa → giá trị (chuỗi) của CauHinh. Đọc một lần mỗi lần chạy; giữa các lần chạy lưu
+   * đệm 5 phút (khóa "ch"). Mất bộ đệm thì đọc lại Sheet.
+   */
   function config() {
-    if (!state.config) {
-      var t = table('CauHinh');
-      var map = {};
-      for (var i = 0; i < t.size(); i++) {
-        var k = Util.str(t.get(i, 'Khóa')).trim();
-        if (k && !(k in map)) map[k] = Util.str(t.get(i, 'Giá trị'));
+    if (state.config) return state.config;
+    var cache = CacheService.getScriptCache();
+    var cached = cache.get(CONFIG_CACHE_KEY);
+    if (cached) {
+      try {
+        state.config = JSON.parse(cached);
+        return state.config;
+      } catch (e) {
+        cache.remove(CONFIG_CACHE_KEY);
       }
-      state.config = map;
+    }
+    state.config = readConfigSheet();
+    try {
+      cache.put(CONFIG_CACHE_KEY, JSON.stringify(state.config), CONFIG_CACHE_SECONDS);
+    } catch (e) {
+      // Bộ đệm lỗi không ảnh hưởng nghiệp vụ
     }
     return state.config;
+  }
+
+  function readConfigSheet() {
+    var t = table('CauHinh');
+    var map = {};
+    for (var i = 0; i < t.size(); i++) {
+      var k = Util.str(t.get(i, 'Khóa')).trim();
+      if (k && !(k in map)) map[k] = Util.str(t.get(i, 'Giá trị'));
+    }
+    return map;
+  }
+
+  /** Bỏ bản đọc CauHinh trong bộ nhớ và bộ đệm (sau khi sửa cấu hình). */
+  function clearConfig() {
+    state.config = null;
+    CacheService.getScriptCache().remove(CONFIG_CACHE_KEY);
+  }
+
+  /** Số phienBanDuLieu hiện tại (mục 2.3 của đặc tả). */
+  function dataVersion() {
+    return Util.toInt(props()[Config.PROP.DATA_VERSION], 1);
+  }
+
+  /** Tăng phienBanDuLieu sau mỗi lần ghi ThietBi. Chạy trong vùng khóa. */
+  function bumpDataVersion() {
+    requireLock();
+    var next = dataVersion() + 1;
+    var values = {};
+    values[Config.PROP.DATA_VERSION] = String(next);
+    setProps(values);
+    return next;
   }
 
   function configInt(key, fallback) {
@@ -482,7 +527,10 @@ var Repo = (function () {
     nextCodes: nextCodes,
     nextDeviceCodes: nextDeviceCodes,
     config: config,
+    clearConfig: clearConfig,
     configInt: configInt,
+    dataVersion: dataVersion,
+    bumpDataVersion: bumpDataVersion,
     statusNames: statusNames,
     statusCode: statusCode
   };

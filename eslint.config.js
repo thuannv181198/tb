@@ -15,8 +15,8 @@ const GOOGLE_SERVICES = [
 
 // Không gian tên và hàm toàn cục của backend (thêm vào đây khi tạo file mới trong gas/)
 const BACKEND_GLOBALS = [
-  'Config', 'Util', 'Repo', 'Migrations', 'Setup', 'SmokeTest',
-  'setup', 'smokeTest'
+  'Config', 'Util', 'Repo', 'Migrations', 'Setup', 'SmokeTest', 'Auth', 'HeThong', 'Api',
+  'setup', 'smokeTest', 'doPost', 'doGet'
 ];
 
 function asGlobals(names, mode) {
@@ -37,7 +37,7 @@ module.exports = [
     },
     rules: {
       'no-redeclare': ['error', { builtinGlobals: false }],
-      'no-unused-vars': ['error', { vars: 'local', args: 'none' }],
+      'no-unused-vars': ['error', { vars: 'local', args: 'none', caughtErrors: 'none' }],
       'no-control-regex': 'off',
       'no-restricted-syntax': ['error',
         { selector: 'ImportDeclaration', message: 'Apps Script không hỗ trợ import.' },
@@ -50,7 +50,30 @@ module.exports = [
     }
   },
   {
-    files: ['tests/**/*.js', 'eslint.config.js'],
+    files: ['web/**/*.js'],
+    ignores: ['web/vendor/**'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: { ...globals.browser }
+    },
+    rules: {
+      'no-unused-vars': ['error', { args: 'none' }],
+      eqeqeq: ['error', 'smart'],
+      // Không đưa dữ liệu vào trang bằng HTML (đặc tả mục 3, quy tắc web-frontend)
+      'no-restricted-properties': ['error',
+        { property: 'innerHTML', message: 'Không dùng innerHTML; dùng h()/textContent trong web/js/dom.js.' },
+        { property: 'outerHTML', message: 'Không dùng outerHTML.' },
+        { property: 'insertAdjacentHTML', message: 'Không dùng insertAdjacentHTML.' },
+        { object: 'document', property: 'write', message: 'Không dùng document.write.' }
+      ],
+      'no-restricted-syntax': ['error',
+        { selector: "CallExpression[callee.property.name='setItem'][callee.object.name='localStorage']", message: 'Dùng web/js/store.js (tiền tố qltb.).' }
+      ]
+    }
+  },
+  {
+    files: ['tests/**/*.js', 'tools/**/*.js', 'eslint.config.js'],
     languageOptions: {
       ecmaVersion: 2023,
       sourceType: 'commonjs',

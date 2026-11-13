@@ -290,6 +290,8 @@ var Config = (function () {
     ['GH_TRA_CUU_HE_THONG_MOI_PHUT', '60', 'Tra cứu phiếu: số lần tối đa mỗi phút trên toàn hệ thống'],
     ['GH_MA_TRUY_CAP_SAI', '5', 'Nhập mã truy cập: số lần sai tối đa mỗi trình duyệt trong cửa sổ'],
     ['GH_MA_TRUY_CAP_SAI_PHUT', '15', 'Nhập mã truy cập: cửa sổ tính lần sai (phút)'],
+    ['GH_MA_TRUY_CAP_SAI_HE_THONG', '30', 'Nhập mã truy cập: số lần sai tối đa trên toàn hệ thống trong cửa sổ (C6)'],
+    ['GH_MA_TRUY_CAP_SAI_HE_THONG_PHUT', '10', 'Nhập mã truy cập: cửa sổ và thời gian chặn toàn hệ thống (phút)'],
     ['ANH_TOI_DA_KB', '1024', 'Kích thước ảnh tối đa sau khi nén (KB)'],
     ['PDF_TOI_DA_KB', '5120', 'Kích thước PDF minh chứng tối đa (KB)'],
     ['SO_FILE_TOI_DA', '5', 'Số file tối đa mỗi lần gửi'],
@@ -303,6 +305,51 @@ var Config = (function () {
   STATUSES.forEach(function (s) {
     CONFIG_DEFAULTS.push(['TEN_TT_' + s.code, s.name, 'Tên hiển thị của tình trạng ' + s.code]);
   });
+
+  /**
+   * Quy tắc kiểm tra giá trị khi Admin sửa cấu hình (config.save). Khóa không có ở đây là chuỗi
+   * tự do tối đa 200 ký tự. int: [nhỏ nhất, lớn nhất].
+   */
+  var CONFIG_RULES = {
+    HAN_MUON_NGAY: { int: [1, 90] },
+    HAN_DE_XUAT_TOI_DA_NGAY: { int: [1, 90] },
+    NHAC_TRUOC_HAN_NGAY: { int: [0, 30] },
+    GIA_HAN_TOI_DA_LAN: { int: [0, 10] },
+    GIA_HAN_TOI_DA_NGAY: { int: [1, 90] },
+    GIU_CHO_PHUT: { int: [5, 240] },
+    LAM_MOI_QR_TOI_DA: { int: [0, 10] },
+    HOI_TT_NHANH_GIAY: { int: [3, 60] },
+    HOI_TT_NHANH_TRONG_GIAY: { int: [0, 600] },
+    HOI_TT_CHAM_GIAY: { int: [5, 120] },
+    SO_DONG_TOI_DA_YC: { int: [1, 30] },
+    SO_YC_CHO_DUYET_MOI_SDT: { int: [1, 5] },
+    PHIEN_GIO: { int: [1, 24] },
+    GIO_EMAIL_TONG_HOP: { int: [0, 23] },
+    SO_NHAN_CHUNG_TOI_THIEU: { int: [0, 5] },
+    GH_GUI_YC_SDT: { int: [1, 100] },
+    GH_GUI_YC_SDT_PHUT: { int: [1, 1440] },
+    GH_GUI_YC_HE_THONG_MOI_PHUT: { int: [1, 1000] },
+    GH_TRA_CUU_SAI_SDT: { int: [1, 100] },
+    GH_TRA_CUU_SAI_PHUT: { int: [1, 1440] },
+    GH_TRA_CUU_HE_THONG_MOI_PHUT: { int: [1, 1000] },
+    GH_MA_TRUY_CAP_SAI: { int: [1, 100] },
+    GH_MA_TRUY_CAP_SAI_PHUT: { int: [1, 1440] },
+    GH_MA_TRUY_CAP_SAI_HE_THONG: { int: [1, 10000] },
+    GH_MA_TRUY_CAP_SAI_HE_THONG_PHUT: { int: [1, 1440] },
+    ANH_TOI_DA_KB: { int: [100, 5120] },
+    PDF_TOI_DA_KB: { int: [100, 20480] },
+    SO_FILE_TOI_DA: { int: [1, 10] },
+    ANH_NHO_TOI_DA_KY_TU: { int: [5000, 45000] },
+    CACHE_CONG_KHAI_GIAY: { int: [30, 21600] },
+    LUU_TT_CA_NHAN_THANG: { int: [1, 120] },
+    MA_TRUY_CAP_BAT: { oneOf: [YES, NO] },
+    MA_TRUY_CAP: { pattern: /^(\d{4,6})?$/, message: 'Mã truy cập gồm 4–6 chữ số.' },
+    MUC_LAP_BIEN_BAN: { statusCodes: true },
+    EMAIL_NHAN_THONG_BAO: { emails: true },
+    TEN_MIEN_WORKSPACE: { pattern: /^([a-z0-9-]+(\.[a-z0-9-]+)+)?$/, message: 'Tên miền không hợp lệ (ví dụ: eaut.edu.vn).' },
+    PHONG_MAC_DINH: { room: true }
+  };
+  STATUSES.forEach(function (s) { CONFIG_RULES['TEN_TT_' + s.code] = { statusName: true }; });
 
   /** Script Properties dùng trong hệ thống. */
   var PROP = {
@@ -370,6 +417,7 @@ var Config = (function () {
     KIT_TYPE: KIT_TYPE,
     VALIDATIONS: VALIDATIONS,
     CONFIG_DEFAULTS: CONFIG_DEFAULTS,
+    CONFIG_RULES: CONFIG_RULES,
     PROP: PROP,
     FOLDERS: FOLDERS,
     CODE_TYPES: CODE_TYPES,
