@@ -31,14 +31,15 @@ Nguồn: https://github.com/google/clasp (mục "Enable the Apps Script API").
 
 ## Bước 2. Đăng nhập clasp (công cụ đẩy code lên Apps Script)
 
-clasp được cài vào thư mục dự án (bản 3.4.1) khi bạn đồng ý cho Claude Code cài.
+clasp 3.4.1 đã được cài trong thư mục dự án; GitHub CLI 2.103.0 đã được cài vào máy (13/11/2026).
 
-1. Gõ:
+1. Đóng hẳn VS Code rồi mở lại thư mục `qltb` (**File → Open Folder**), để cửa sổ dòng lệnh nhận Node.js, Git và GitHub CLI vừa cài. Mở Terminal: menu **Terminal → New Terminal**.
+2. Gõ:
    ```
    npx clasp login
    ```
-2. Trình duyệt mở trang Google. Chọn **Gmail chủ sở hữu** → bấm **Cho phép (Allow)**.
-3. Trang báo đăng nhập thành công thì đóng tab.
+3. Trình duyệt mở trang Google. Chọn **Gmail chủ sở hữu** → bấm **Cho phép (Allow)**.
+4. Trang báo đăng nhập thành công thì đóng tab.
 
 Thông tin đăng nhập được lưu ở `C:\Users\<tên máy>\.clasprc.json`, nằm ngoài thư mục dự án và không đưa lên GitHub. **Không gửi file này cho ai.**
 
@@ -163,7 +164,17 @@ Thay đổi origin có thể mất từ 5 phút đến vài giờ mới có hi�
    - chọn **Public** (GitHub Pages miễn phí cần repo công khai; repo không chứa bí mật);
    - **không** tích tạo README;
    - **Create repository**.
-3. Báo Claude Code đã tạo repo. Claude Code sẽ nối repo trên máy với GitHub và đẩy code lên, có hỏi bạn trước khi đẩy. Lần đầu, trình duyệt mở trang đăng nhập GitHub để cấp quyền.
+3. Đăng nhập GitHub CLI (một lần cho máy). Trong Terminal của VS Code gõ:
+   ```
+   gh auth login
+   ```
+   Trả lời lần lượt (dùng phím mũi tên và Enter):
+   - **GitHub.com**;
+   - **HTTPS**;
+   - **Yes** (dùng thông tin này cho Git);
+   - **Login with a web browser**.
+4. Màn hình hiện một mã 8 ký tự dạng `XXXX-XXXX`. Nhấn Enter, trình duyệt mở `github.com/login/device` → nhập mã → **Authorize**.
+5. Terminal báo "Logged in as thuannv181198" là xong. Báo Claude Code; Claude Code sẽ nối repo trên máy với GitHub và đẩy code lên, có hỏi bạn trước khi đẩy.
 
 ## Bước 9. Bật GitHub Pages bằng GitHub Actions
 
