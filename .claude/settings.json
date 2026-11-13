@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test *)",
+      "Bash(npm run lint *)",
+      "Bash(npm run dev *)",
+      "Bash(npm run push:dev)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "PowerShell(npm test *)",
+      "PowerShell(npm run lint *)",
+      "PowerShell(npm run dev *)",
+      "PowerShell(npm run push:dev)",
+      "PowerShell(git status *)",
+      "PowerShell(git diff *)",
+      "PowerShell(git log *)",
+      "PowerShell(git add *)",
+      "PowerShell(git commit *)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(npm install *)",
+      "Bash(npm run push:prod*)",
+      "Bash(npm run deploy*)",
+      "Bash(npx clasp *)",
+      "Bash(clasp *)",
+      "PowerShell(git push *)",
+      "PowerShell(npm install *)",
+      "PowerShell(npm run push:prod*)",
+      "PowerShell(npm run deploy*)",
+      "PowerShell(npx clasp *)",
+      "PowerShell(clasp *)"
+    ],
+    "deny": [
+      "Read(./.clasprc.json)",
+      "Read(~/.clasprc.json)",
+      "Read(./.env)",
+      "Read(./.env.*)"
+    ]
+  }
+}
