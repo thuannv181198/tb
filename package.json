@@ -1,0 +1,19 @@
+{
+  "name": "qltb-phong-th",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Quản lý thiết bị phòng thực hành – Khoa Công nghệ Năng lượng (Google Apps Script + GitHub Pages)",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test --test-reporter=spec",
+    "lint": "eslint gas tests eslint.config.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.13.0",
+    "globals": "17.13.0"
+  }
+}
