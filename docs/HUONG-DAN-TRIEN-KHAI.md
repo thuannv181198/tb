@@ -156,6 +156,13 @@ Thay đổi origin có thể mất từ 5 phút đến vài giờ mới có hi�
 
 **Không** bấm "Triển khai mới" lần nữa: làm vậy tạo URL khác, giao diện sẽ gọi nhầm bản cũ.
 
+Có thể nhờ Claude Code làm 7.1 và 7.2 bằng clasp thay cho các thao tác bấm (bản DEV đã triển khai theo cách này ngày 14/11/2026). Cài đặt "Thực thi dưới dạng: Tôi" và "Bất kỳ ai" lấy từ `gas/appsscript.json`:
+
+- 7.1: `npx clasp create-deployment --description "DEV"`
+- 7.2: `npm run push:dev`, rồi `npx clasp update-deployment <mã triển khai> --description "DEV"`. Mã triển khai là đoạn giữa `/s/` và `/exec` trong URL web app.
+
+Nguồn: `npx clasp --help` (clasp 3.4.1).
+
 ## Bước 8. Đưa code lên GitHub
 
 1. Mở `https://github.com`, đăng nhập **thuannv181198**.

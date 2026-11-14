@@ -9,5 +9,5 @@ export const CONFIG = Object.freeze({
   // OAuth Client ID loại Web application (dạng ...apps.googleusercontent.com)
   CLIENT_ID: '',
   // URL web app Apps Script (dạng https://script.google.com/macros/s/.../exec)
-  API_URL: ''
+  API_URL: 'https://script.google.com/macros/s/AKfycbwuMMSl_y8j9xCIofWMCnWJEq9ZsI6x_WkQJHKBQwU5nlB7rok7zkTfJ8ijidHOYFVX/exec'
 });

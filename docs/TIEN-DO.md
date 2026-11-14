@@ -44,12 +44,13 @@
 - Đã xong: Bước 1–3 (đăng nhập clasp, gh; tạo project "QLTB DEV", `npm run push:dev` 10 file); tạo repo công khai `thuannv181198/tb`, đẩy nhánh `main`.
 - Bước 4–5: `setup()` chạy xong; `smokeTest()` trên DEV **13/13 ca đạt** (13/11/2026 19:40) – hành vi Sheet thật khớp giả định của bộ giả lập.
 - Bước 9: GitHub Pages (nguồn GitHub Actions) chạy, `https://thuannv181198.github.io/tb/` trả HTTP 200.
+- Bước 7: Claude Code triển khai web app DEV bằng `clasp create-deployment` (bản @1, 14/11/2026); gọi GET trả `"ok":true`; đã điền `API_URL` vào `web/config.js`.
 - Sửa lỗi đỏ khi gõ `npx`: PowerShell chặn `npx.ps1` → `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` (người dùng tự chạy).
 
 ### Chờ người dùng
 
 1. ~~Đồng ý cài clasp và GitHub CLI~~ (đã xong).
-2. Làm `HUONG-DAN-TRIEN-KHAI.md` Bước 6, 7, 10–12. Claude Code chạy giúp các lệnh `clasp`, `git push`.
+2. Làm `HUONG-DAN-TRIEN-KHAI.md` Bước 6 (Client ID; gửi Claude Code để điền `web/config.js`), rồi Bước 11–12. Claude Code chạy giúp các lệnh `clasp`, `git push`.
 3. Gửi nhật ký `smokeTest()`, Client ID, URL web app.
 4. Chạy kiểm thử M1 trong `KIEM-THU-THU-CONG.md`, rồi báo kết quả.
 
